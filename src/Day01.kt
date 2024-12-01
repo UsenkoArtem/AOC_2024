@@ -1,21 +1,43 @@
+import kotlin.math.abs
+
 fun main() {
     fun part1(input: List<String>): Int {
-        return input.size
+        var (left, right) = input.map { it.substringBefore(" ").toInt() to it.substringAfterLast(" ").toInt() }.unzip()
+        left = left.sorted()
+        right = right.sorted()
+        return left.zip(right).sumOf { (l, r) -> abs(l - r) }
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        var (left, right) = input.map { it.substringBefore(" ").toInt() to it.substringAfterLast(" ").toInt() }.unzip()
+        left = left.sorted()
+        right = right.sorted()
+        var res = 0
+        var jStartIndex = 0
+        for (i in left.indices) {
+            var count = 0
+            var fistSimilarIndex = -1
+            for (j in jStartIndex until right.size) {
+                if (left[i] == right[j]) {
+                    count++
+                    if (fistSimilarIndex == -1) {
+                        fistSimilarIndex = j
+                    }
+                }
+                if (right[j] > left[i]) {
+                    break
+                }
+            }
+            if (fistSimilarIndex != -1) {
+                jStartIndex = fistSimilarIndex
+            }
+            res += count * left[i]
+        }
+        return res
     }
 
-    // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
-
-    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day01")
+    val input2 = readInput("Day01")
     part1(input).println()
-    part2(input).println()
+    part2(input2).println()
 }
