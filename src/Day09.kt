@@ -12,19 +12,16 @@ fun main() {
             isFile = !isFile
         }
 
-        // Step 2: Simulate the compaction process
         var lastFreeIndex = blocks.indexOf(-1)
         while (lastFreeIndex != -1) {
             val nextFileIndex = blocks.indexOfLast { ch -> ch != -1 }
             if (nextFileIndex == -1 || nextFileIndex < lastFreeIndex) break
-            // Move the block to the free space
             blocks[lastFreeIndex] = blocks[nextFileIndex]
             blocks[nextFileIndex] = -1
-            // Update last free index
+
             lastFreeIndex = blocks.indexOf(-1)
         }
 
-        // Step 3: Calculate the checksum
         var checksum = 0L
         blocks.forEachIndexed { index, block ->
             if (block != -1) {
@@ -87,15 +84,15 @@ fun main() {
                 if (blockSize <= rangeFreeBlocks.count() && fileIndexBlockRange.last > rangeFreeBlocks.first) {
                     if (fileIndexBlockRange == IntRange.EMPTY) break
 
-                    // Move the block to the free space
+              
                     for (i in 0 until blockSize) {
                         blocks[rangeFreeBlocks.first + i] = blocks[fileIndexBlockRange.first + i]
                     }
-                    // Fill the rest with -1
+           
                     for (i in blockSize until rangeFreeBlocks.count()) {
                         blocks[rangeFreeBlocks.first + i] = -1
                     }
-                    // Update the file blocks
+        
                     for (i in fileIndexBlockRange) {
                         blocks[i] = -1
                     }
